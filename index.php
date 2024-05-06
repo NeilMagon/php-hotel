@@ -36,6 +36,18 @@
             'distance_to_center' => 50
         ],
     ];
+    $parkingFilter = isset($_GET['park']) && $_GET['park'] === '1' ? true : false;
+
+    $filreredHotels = $hotels;
+    if ($parkingFilter) {
+        $hotelsWithPark = [];
+        foreach($filreredHotels as $hotel) {
+            if ($hotel['parking'] === true) {
+                $hotelsWithPark[] = $hotel;
+            }
+        }
+        $filreredHotels = $hotelsWithPark;
+    }
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +61,7 @@
 </head>
 <body>
     <div class="container">
+        <h1>Hotels</h1>
         <table class="table">
             <thead>
                 <tr>
@@ -60,7 +73,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($hotels as $hotel) { ?>
+                <?php foreach($filreredHotels as $hotel) { ?>
                     <tr>
                         <td><?php echo $hotel['name']; ?></td>
                         <td><?php echo $hotel['description']; ?></td>
@@ -71,6 +84,13 @@
                 <?php } ?>
             </tbody>
         </table>
+        <form method="GET">
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="park" name="park" value="1">
+                <label class="form-check-label" for="park">Con parcheggio</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
