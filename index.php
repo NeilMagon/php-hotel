@@ -37,16 +37,29 @@
         ],
     ];
     $parkingFilter = isset($_GET['park']) && $_GET['park'] === '1' ? true : false;
+    $vote_filter = isset($_GET['vote']) ? intval($_GET['vote']) : 0;
 
-    $filreredHotels = $hotels;
+    $filteredHotels = $hotels;
     if ($parkingFilter) {
         $hotelsWithPark = [];
-        foreach($filreredHotels as $hotel) {
+        foreach($filteredHotels as $hotel) {
             if ($hotel['parking'] === true) {
                 $hotelsWithPark[] = $hotel;
             }
         }
-        $filreredHotels = $hotelsWithPark;
+        $filteredHotels = $hotelsWithPark;
+    }
+
+    if($vote_filter > 0) {
+        $hotelsFilteredByVote = [];
+    
+        foreach($filteredHotels as $hotel) {
+            if($hotel['vote'] >= $vote_filter) {
+                $hotelsFilteredByVote[] = $hotel;
+            }
+        }
+    
+        $filteredHotels = $hotelsFilteredByVote;
     }
 ?>
 
@@ -73,7 +86,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($filreredHotels as $hotel) { ?>
+                <?php foreach($filteredHotels as $hotel) { ?>
                     <tr>
                         <td><?php echo $hotel['name']; ?></td>
                         <td><?php echo $hotel['description']; ?></td>
@@ -88,6 +101,17 @@
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="park" name="park" value="1">
                 <label class="form-check-label" for="park">Con parcheggio</label>
+            </div>
+            <div class="mb-3">
+                <label for="vote" class="form-label">Voto</label>
+                <select id="vote" class="form-select" name="vote">
+                    <option <?php echo $vote_filter === 0 ? 'selected' : '' ?> value="0">Tutti</option>
+                    <option <?php echo $vote_filter === 1 ? 'selected' : '' ?> value="1">Almeno 1</option>
+                    <option <?php echo $vote_filter === 2 ? 'selected' : '' ?> value="2">Almeno 2</option>
+                    <option <?php echo $vote_filter === 3 ? 'selected' : '' ?> value="3">Almeno 3</option>
+                    <option <?php echo $vote_filter === 4 ? 'selected' : '' ?> value="4">Almeno 4</option>
+                    <option <?php echo $vote_filter === 5 ? 'selected' : '' ?> value="5">Almeno 5</option>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
